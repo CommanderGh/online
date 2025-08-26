@@ -1,6 +1,9 @@
-streamlit
-pandas
-numpy
-plotly
-matplotlib
-datetime
+echo streamlit > requirements.txt
+echo pandas >> requirements.txt
+echo numpy >> requirements.txt
+echo plotly >> requirements.txt
+
+git add requirements.txt
+git commit -m "Add full requirements for Streamlit Cloud"
+git push
+
