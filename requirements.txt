@@ -1,9 +1,4 @@
-echo streamlit > requirements.txt
-echo pandas >> requirements.txt
-echo numpy >> requirements.txt
-echo plotly >> requirements.txt
-
-git add requirements.txt
-git commit -m "Add full requirements for Streamlit Cloud"
-git push
-
+echo "streamlit==1.38.0" > requirements.txt
+echo "pandas==2.2.2" >> requirements.txt
+echo "numpy==1.26.4" >> requirements.txt
+echo "plotly==5.23.0" >> requirements.txt
