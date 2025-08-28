@@ -17,6 +17,49 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
+# 👉 Paste the CSS function here
+def local_css():
+    st.markdown("""
+        <style>
+        /* Background */
+        .stApp {
+            background: linear-gradient(135deg, #f0f4ff, #ffffff);
+            font-family: "Segoe UI", sans-serif;
+        }
+
+        /* Headings */
+        h1, h2, h3 {
+            color: #1a237e;
+        }
+
+        /* Buttons */
+        div.stButton > button {
+            background-color: #1a73e8;
+            color: white;
+            border-radius: 10px;
+            padding: 8px 16px;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+        div.stButton > button:hover {
+            background-color: #0b59d0;
+        }
+
+        /* Product cards */
+        .card {
+            background: white;
+            padding: 15px;
+            border-radius: 12px;
+            box-shadow: 0px 4px 12px rgba(0,0,0,0.1);
+            margin-bottom: 15px;
+        }
+        </style>
+    """, unsafe_allow_html=True)
+
+# Activate the CSS
+local_css()
+
+
 # Initialize session state variables
 if 'logged_in' not in st.session_state:
     st.session_state.logged_in = False
@@ -282,12 +325,13 @@ def cart_page():
         checkout()
 
 def checkout():
+    def checkout():
     if not st.session_state.cart:
         st.error("Your cart is empty!")
         return
-    
+
     st.title("Checkout")
-    
+
     with st.form("checkout_form"):
         st.subheader("Shipping Information")
         name = st.text_input("Full Name")
@@ -295,12 +339,18 @@ def checkout():
         city = st.text_input("City")
         state = st.text_input("State")
         zip_code = st.text_input("ZIP Code")
-        
+
         st.subheader("Payment Information")
-        card_number = st.text_input("Card Number")
-        exp_date = st.text_input("Expiration Date (MM/YY)")
-        cvv = st.text_input("CVV", type="password")
-        
+        payment_method = st.radio("Choose Payment Method", ["Credit/Debit Card", "Mobile Money (MoMo)"])
+
+        if payment_method == "Credit/Debit Card":
+            card_number = st.text_input("Card Number")
+            exp_date = st.text_input("Expiration Date (MM/YY)")
+            cvv = st.text_input("CVV", type="password")
+        else:
+            momo_number = st.text_input("Mobile Money Number")
+            provider = st.selectbox("Network Provider", ["MTN", "Vodafone", "AirtelTigo"])
+
         if st.form_submit_button("Complete Purchase"):
             # Process order
             order_id = len(st.session_state.orders) + 1
@@ -316,16 +366,18 @@ def checkout():
                     "state": state,
                     "zip_code": zip_code
                 },
+                "payment_method": payment_method,
                 "order_date": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
                 "status": "Processing"
             }
-            
+
             st.session_state.orders.append(order)
             st.session_state.cart = []
-            
-            st.success(f"Order placed successfully! Your order ID is #{order_id}")
+
+            st.success(f"✅ Order placed successfully! Your order ID is #{order_id}")
             time.sleep(2)
             st.rerun()
+
 
 # Orders page for customers
 def orders_page():
